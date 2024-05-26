@@ -3,47 +3,6 @@
 
 Este projeto é um exemplo de configuração de um ambiente Kafka no Kubernetes, com serviços Go para produção e consumo de mensagens. O projeto inclui um serviço `kafka-producer` que envia mensagens para um tópico Kafka e um serviço `kafka-consumer` que lê mensagens de todas as partições do tópico simultaneamente.
 
-## Estrutura do Projeto
-
-kafka-example/
-├── kafka-consumer/
-│ ├── main.go
-│ ├── Dockerfile
-│ └── k8s/
-│ └── deployment.yaml
-├── kafka-producer/
-│ ├── main.go
-│ ├── Dockerfile
-│ └── k8s/
-│ └── deployment.yaml
-├── producer/
-│ ├── main.go
-│ ├── Dockerfile
-│ └── k8s/
-│ └── deployment.yaml
-├── consumer/
-│ ├── main.go
-│ ├── Dockerfile
-│ └── k8s/
-│ └── deployment.yaml
-├── nats/
-│ └── k8s/
-│ └── statefulset.yaml
-├── kafka/
-│ └── k8s/
-│ ├── kafka-deployment.yaml
-│ └── zookeeper-deployment.yaml
-├── helm/
-│ └── kafka-example/
-│ ├── Chart.yaml
-│ ├── values.yaml
-│ ├── templates/
-│ ├── producer-deployment.yaml
-│ ├── consumer-deployment.yaml
-│ ├── nats-deployment.yaml
-├── skaffold.yaml
-└── setup.sh
-
 ## Pré-requisitos
 
 - [Docker](https://www.docker.com/)
