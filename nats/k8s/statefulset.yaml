@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats
+spec:
+  ports:
+  - port: 4222
+    name: client
+  - port: 6222
+    name: route
+  - port: 8222
+    name: monitor
+  clusterIP: None
+  selector:
+    app: nats
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nats
+spec:
+  serviceName: "nats"
+  replicas: 5  # Ajuste este número para 5 instâncias
+  selector:
+    matchLabels:
+      app: nats
+  template:
+    metadata:
+      labels:
+        app: nats
+    spec:
+      containers:
+      - name: nats
+        image: nats:latest
+        ports:
+        - containerPort: 4222
+          name: client
+        - containerPort: 6222
+          name: route
+        - containerPort: 8222
+          name: monitor
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nats-config
+        command:
+        - /nats-server
+        - --config
+        - /etc/nats-config/nats.conf
+      volumes:
+      - name: config-volume
+        configMap:
+          name: nats-config
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nats-config
+data:
+  nats.conf: |
+    port: 4222
+    http: 8222
+    cluster {
+      port: 6222
+      routes = [
+        nats://nats-0.nats:6222,
+        nats://nats-1.nats:6222,
+        nats://nats-2.nats:6222,
+        nats://nats-3.nats:6222,
+        nats://nats-4.nats:6222
+      ]
+    }
+

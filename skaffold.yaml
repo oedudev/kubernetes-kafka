@@ -1,0 +1,34 @@
+
+apiVersion: skaffold/v2beta19
+kind: Config
+metadata:
+  name: kafka-example
+build:
+  artifacts:
+  - image: kafka-producer
+    context: kafka-producer
+    docker:
+      dockerfile: Dockerfile
+  - image: kafka-consumer
+    context: kafka-consumer
+    docker:
+      dockerfile: Dockerfile        
+  - image: nats-producer
+    context: nats-producer
+    docker:
+      dockerfile: Dockerfile
+  - image: nats-consumer
+    context: nats-consumer
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+      - kafka-producer/k8s/deployment.yaml
+      - kafka-consumer/k8s/deployment.yaml
+      - nats-producer/k8s/deployment.yaml
+      - nats-consumer/k8s/deployment.yaml
+      - kafka/k8s/kafka-deployment.yaml
+      - kafka/k8s/zookeeper-deployment.yaml
+      - nats/k8s/statefulset.yaml
+
